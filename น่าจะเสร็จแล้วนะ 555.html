@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ฟอร์มการเดินรถขนส่ง</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #0056b3;
+            margin: 10px 0;
+        }
+
+        form {
+            width: 100%;
+            max-width: 800px;
+            margin: 10px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+        }
+
+        .form-header, .form-row, .summary-container {
+            margin-bottom: 10px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        input:focus, select:focus {
+            border-color: #0056b3;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 86, 179, 0.5);
+        }
+
+        .form-header {
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-header div {
+            flex: 1;
+        }
+
+        .points-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .points-row span {
+            font-weight: bold;
+            margin-right: 10px;
+            flex: 0;
+            font-size: 16px;
+        }
+
+        .points-row input[type="text"] {
+            flex: 2;
+        }
+
+        .distance-container {
+            flex: 1;
+        }
+
+        .distance-container label {
+            font-size: 14px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .distance-container input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .summary-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .summary-container div {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #0056b3;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #003f7f;
+        }
+
+        @media print {
+            body {
+                background: #fff;
+            }
+
+            form {
+                box-shadow: none;
+                margin: 0;
+                padding: 10px;
+                border: none;
+            }
+
+            button {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>ลำดับการจัดส่ง</h1>
+    <form id="transportForm">
+        <div class="form-header">
+            <div>
+                <label for="travelDate">วันเดินทาง:</label>
+                <input type="date" id="travelDate" name="travelDate" required>
+            </div>
+            <div>
+                <label for="route">สาย:</label>
+                <input type="text" id="route" name="route" required>
+            </div>
+        </div>
+
+        <div class="form-header">
+            <div>
+                <label for="vehicleType">ประเภทรถ:</label>
+                <select id="vehicleType" name="vehicleType" required>
+                    <option value="" disabled selected>เลือกประเภทรถ</option>
+                    <option value="เก๋ง">กระบะ</option>
+                    <option value="กระบะ">4 ล้อใหญ่</option>
+                    <option value="บัส">6 ล้อกลาง</option>
+                    <option value="รถตู้">6 ล้อใหญ่</option>
+                </select>
+            </div>
+            <div>
+                <label for="vehicleNumber">ทะเบียนรถ:</label>
+                <input type="text" id="vehicleNumber" name="vehicleNumber" required>
+            </div>
+        </div>
+
+        <div>           
+            <div class="points-row">
+                <span>เริ่ม:</span>
+                <select id="startingPoint" name="startingPoint" style="flex: 2; padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; box-sizing: border-box;">
+                    <option value="" disabled selected>เลือกสถานที่เริ่มต้น</option>
+                    <option value="สถานีขนส่ง A">บริษัท กมลพิศาลกระจกนิรภัย จำกัด</option>
+                    <option value="สถานีขนส่ง B">บริษัท กมลพิศาลกระจกนิรภัย จำกัด สาขาเชียงใหม่</option>
+                    <option value="สถานีขนส่ง C">คลังสินค้า KSG พระราม 2</option>
+                </select>
+                <div class="distance-container">
+                    <label for="startingDistance">ระยะทาง (กิโลเมตร):</label>
+                    <input type="number" id="startingDistance" name="startingDistance" step="0.01" placeholder="ระบุระยะทาง">
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div id="points-container">
+                <div class="points-row">
+                    <span>1:</span>
+                    <input type="text" id="deliveryPoint1" name="deliveryPoint1" placeholder="ชื่อสถานที่">
+                    <div class="distance-container">
+                        <label for="distancePoint1">ระยะทาง (กิโลเมตร):</label>
+                        <input type="number" id="distancePoint1" name="distancePoint1" step="0.01" placeholder="ระบุระยะทาง">
+                    </div>
+                </div>
+            </div>
+            <div class="btn-container">
+                <button type="button" id="addPointBtn">เพิ่มจุดส่งสินค้า</button>
+            </div>
+        </div>
+
+        <div>  
+            <div>          
+                <div class="points-row">
+                     <span>ถึง:</span>
+                     <select id="endingPoint" name="endingPoint" style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 16px;">
+                         <option value="" disabled selected>เลือกสถานที่ปลายทาง</option>
+                         <option value="สถานีขนส่ง A">บริษัท กมลพิศาลกระจกนิรภัย จำกัด</option>
+                         <option value="สถานีขนส่ง B">บริษัท กมลพิศาลกระจกนิรภัย จำกัด สาขาเชียงใหม่</option>
+                         <option value="สถานีขนส่ง C">คลังสินค้า KSG พระราม 2</option>
+                     </select>
+                 </div>
+             </div>
+        <div class="summary-container">
+            <div>
+                <label for="totalDistance">ระยะทางรวม (กิโลเมตร):</label>
+                <input type="number" id="totalDistance" name="totalDistance" step="0.01" required readonly>
+            </div>
+            <div>
+                <label for="totalTime">เวลาเดินทางรวมโดยประมาณ:</label>
+                <input type="text" id="totalTime" name="totalTime" required readonly>
+            </div>
+        </div>
+       
+    </form>
+
+    <script>
+        document.getElementById('addPointBtn').addEventListener('click', function() {
+            const pointsContainer = document.getElementById('points-container');
+            const currentCount = pointsContainer.getElementsByClassName('points-row').length;
+            const newPointNumber = currentCount + 1;
+
+            const newRow = document.createElement('div');
+            newRow.className = 'points-row';
+
+            const pointLabel = document.createElement('span');
+            pointLabel.innerText = ` ${newPointNumber}:`;
+
+            const pointInput = document.createElement('input');
+            pointInput.type = 'text';
+            pointInput.name = `deliveryPoint${newPointNumber}`;
+            pointInput.id = `deliveryPoint${newPointNumber}`;
+            pointInput.placeholder = 'ชื่อสถานที่';
+
+            const distanceContainer = document.createElement('div');
+            distanceContainer.className = 'distance-container';
+
+            const distanceLabel = document.createElement('label');
+            distanceLabel.setAttribute('for', `distancePoint${newPointNumber}`);
+            distanceLabel.innerText = 'ระยะทาง (กิโลเมตร):';
+
+            const distanceInput = document.createElement('input');
+            distanceInput.type = 'number';
+            distanceInput.name = `distancePoint${newPointNumber}`;
+            distanceInput.id = `distancePoint${newPointNumber}`;
+            distanceInput.step = '0.01';
+            distanceInput.placeholder = 'ระบุระยะทาง';
+
+            distanceContainer.appendChild(distanceLabel);
+            distanceContainer.appendChild(distanceInput);
+
+            newRow.appendChild(pointLabel);
+            newRow.appendChild(pointInput);
+            newRow.appendChild(distanceContainer);
+
+            pointsContainer.appendChild(newRow);
+        });
+
+        function calculateTotalDistance() {
+            let totalDistance = 0;
+
+            // รวมระยะทางจากจุดเริ่มต้น
+            const startingDistance = parseFloat(document.getElementById('startingDistance').value) || 0;
+            totalDistance += startingDistance;
+
+            // รวมระยะทางจากจุดส่งสินค้า
+            const distanceInputs = document.querySelectorAll('[id^="distancePoint"]');
+            distanceInputs.forEach(input => {
+                totalDistance += parseFloat(input.value) || 0; // ถ้าไม่ได้กรอกค่า ให้ใช้ 0
+            });
+
+            document.getElementById('totalDistance').value = totalDistance.toFixed(2);
+            calculateTravelTime(totalDistance); // เรียกฟังก์ชันคำนวณเวลา
+        }
+
+        // ฟังก์ชันคำนวณเวลาเดินทาง
+        function calculateTravelTime(totalDistance) {
+            const speed = 60; // ความเร็วคงที่ 60 กม./ชม.
+            const totalHours = totalDistance / speed; // คำนวณเวลาทั้งหมด (ชั่วโมง)
+
+            // แปลงเวลาเป็น ชั่วโมง:นาที
+            const hours = Math.floor(totalHours); // ชั่วโมงเต็ม
+            const minutes = Math.round((totalHours - hours) * 60); // นาทีที่เหลือ
+
+            // แสดงผลในฟอร์ม
+            document.getElementById('totalTime').value = `${hours} ชั่วโมง ${minutes} นาที`;
+        }
+
+        // เรียกใช้ฟังก์ชันคำนวณเมื่อมีการเปลี่ยนแปลงข้อมูลใน points-container
+        document.getElementById('transportForm').addEventListener('input', calculateTotalDistance);
+    </script>
+</body>
+</html>
